@@ -23,10 +23,7 @@ if ($result->num_rows > 0) {
     <div class="col-sm-3 m-2 shadow align-self-center" style="width: 400px;">
                     <div class="p-2 m-2 bg-white">
                         <p><strong>Topic:</strong>'.$row["topic"].'
-                            <span class="align-self-center" style="float: right;">'.$row["likes"].
-                                '<a href="#">   
-                                    <img src="images/icons8-like-50.png" alt="" style="width: 20px;height:20px;">
-                               </a>
+                            <span class="align-self-center" style="float: right;">'.$row["likes"].'<a href="#"><img src="images/icons8-like-50.png" alt="" style="width: 20px;height:20px;"></a>
                             </span> 
                                 
                         </p>
