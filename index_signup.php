@@ -1,43 +1,6 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login and Signup</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<style>
-    
-
-
-</style>
-<script>
-    document.getElementById('signup-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const password = document.getElementById('signup-password').value;
-    const confirmPassword = document.getElementById('signup-confirm-password').value;
-
-    if (password !== confirmPassword) {
-        alert('Passwords do not match.');
-        return;
-    }
-
-    // Here you can add the logic to handle the signup process, such as sending the data to a server.
-    alert('Signup successful!');
-});
-
-document.getElementById('login-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    // Here you can add the logic to handle the login process, such as sending the data to a server.
-    alert('Login successful!');
-});
-
-</script>
-<body>
-    
-   
-</body>
-</html> -->
+<?php
+$cookie_name = "user";
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -206,7 +169,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
 <body>
 <?php
 $cookie_name = "user";
-$cookie_value = "";
+// $cookie_value = "";
 // setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
 ?>
 

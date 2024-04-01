@@ -1,44 +1,55 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login and Signup</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<style>
+<?php
+$finalUS="";
+$finalEM="";
+$finalPN=-1;
+$success = 0;
+try {
+if($_SERVER["REQUEST_METHOD"]=="POST"){
     
-
-
-</style>
-<script>
-    document.getElementById('signup-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const password = document.getElementById('signup-password').value;
-    const confirmPassword = document.getElementById('signup-confirm-password').value;
-
-    if (password !== confirmPassword) {
-        alert('Passwords do not match.');
-        return;
-    }
-
-    // Here you can add the logic to handle the signup process, such as sending the data to a server.
-    alert('Signup successful!');
-});
-
-document.getElementById('login-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    // Here you can add the logic to handle the login process, such as sending the data to a server.
-    alert('Login successful!');
-});
-
-</script>
-<body>
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "blogdb";
     
-   
-</body>
-</html> -->
+    
+        $email=$_POST["email"];
+        $pwd=$_POST["pwd"];
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        // Check connection
+        if (!$conn) {
+            echo "<h1>Failed!</h1>";
+            die("Connection failed: " . mysqli_connect_error());
+        }
+        // echo "Connected successfully";
+        $sql = "SELECT username,email,noofpost FROM users where email='$email' and passwordblog='$pwd'";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $finalUS=$row["username"];
+                $finalEM=$row["email"];
+                $finalPN=$row["noofpost"];
+                setcookie("user", $finalUS, time() + (86400 * 30), "/"); // 86400 = 1
+                // setcookie("email", $finalEM, time() + (86400 * 30), "/"); // 86400 = 1
+                // setcookie("PN", $finalPN, time() + (86400 * 30), "/"); // 86400 = 1
+            }
+            $success=1;
+        }
+        else{
+            throw new Exception("No user found!!");
+        }
 
+    
+}
+} catch (Exception $e) {
+    $success=0;
+}
+
+// Create connection
+
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,16 +60,6 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Blog | Home</title>
     <style>
-        #body-id {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
         .container {
             width: 80%;
             max-width: 600px;
@@ -199,30 +200,44 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             border: none;
             padding-right: 10px;
         }
+
+        #body-id {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card p {
+            margin: 10px 0;
+        }
     </style>
 
 </head>
 
 <body>
-<?php
-$cookie_name = "user";
-$cookie_value = "";
-// setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
-?>
-
-<?php
-if(!isset($_COOKIE[$cookie_name])) {
-    
-  echo "<script> alert('" . $cookie_name . " is not set');</script>";
-} else {
-    echo "<script> alert('" . $cookie_name . " is set');</script>";
-}
-
-
-?>
-
-
-
 
     <!--  -->
     <div class="header">
@@ -253,7 +268,19 @@ if(!isset($_COOKIE[$cookie_name])) {
                 </div>
                 <div class="col align-self-center align-items-end menu">
                     <div class="d-flex justify-content-end">
-                        <a class="nav-link" href="/blog_web/login.php" style="color: white;">Login / Sign up</a>
+                        <a class="nav-link" href="/login.php" style="color: white;">
+                            <?php
+                            try {
+                                if (!isset($_COOKIE["user"])) {
+                                    echo "Login/Sign Up";
+                                } else {
+                                    echo "Welcome," . $_COOKIE["user"] . "!";
+                                }
+                            } catch (Exception $e) {
+                                echo "Login/Sign Up";
+                            }
+                            ?>
+                        </a>
                     </div>
                 </div>
                 <div class="col align-self-center align-items-end menu-sm-bar">
@@ -273,19 +300,44 @@ if(!isset($_COOKIE[$cookie_name])) {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-            <p><a href="#" class="nav-link">Home</a></p>
+            <p><a href="/index.php" class="nav-link">Home</a></p>
             <p><a href="#" class="nav-link">About Us</a></p>
             <p><a href="#" class="nav-link">Contact us</a></p>
             <p>
-                <a href="/blog_web/login.php">
-                    <button class="btn btn-secondary" type="button">Login / Sign up</button>
+                <a href="/login.php">
+                    <button class="btn btn-secondary" type="button">
+                        <?php
+                        try {
+                            if (!isset($_COOKIE["user"])) {
+                                echo "Login/Sign Up";
+                            } else {
+                                echo "Welcome," . $_COOKIE["user"] . "!";
+                            }
+                        } catch (Exception $e) {
+                            echo "Login/Sign Up";
+                        }
+                        ?>
+                    </button>
                 </a>
 
         </div>
     </div>
     <div id="body-id">
-        <div class="container">
-            
+        <div class="card-container">
+            <div class="card">
+                <?php
+                if($success==1){
+                    echo "<h2><em>Welcome ,</em>".$finalUS."</h2>
+                    <p>Email: ".$finalEM."</p>
+                    <p>Posts: ".$finalPN."</p>";
+                }
+                else{
+                    echo "<h2>Failed!!</h2>";
+                }
+                
+                ?>
+                
+            </div>
         </div>
     </div>
 
@@ -336,6 +388,8 @@ if(!isset($_COOKIE[$cookie_name])) {
         </div>
 
     </div>
+
+
     <script>
         // When the user scrolls the page, execute myFunction 
         window.onscroll = function() {

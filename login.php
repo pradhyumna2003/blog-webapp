@@ -1,8 +1,4 @@
-<?php
-$cookie_name = "user";
-$cookie_value = "John Doe";
-setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1 day
-?>
+<!--  -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -200,11 +196,16 @@ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1
                     <div class="d-flex justify-content-end">
                         <a class="nav-link" href="/login.php" style="color: white;">
                         <?php
-                            if(!isset($_COOKIE[$cookie_name])) {
+                            try{
+                                if(!isset($_COOKIE["user"])) {
+                                    echo "Login/Sign Up";
+                                } else {
+                                    echo "Welcome,".$_COOKIE["user"]."!";
+                                }
+                            }catch(Exception $e){
                                 echo "Login/Sign Up";
-                            } else {
-                                echo "Welcome,".$_COOKIE[$cookie_name]."!";
                             }
+                            
                             ?>
                         </a>
                     </div>
@@ -231,13 +232,19 @@ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1
             <p><a href="#" class="nav-link">Contact us</a></p>
             <p>
                 <a href="/login.php">
-                    <button class="btn btn-secondary" type="button"> <?php
-                            if(!isset($_COOKIE[$cookie_name])) {
+                    <button class="btn btn-secondary" type="button"> 
+                        <?php
+                            try{
+                                if(!isset($_COOKIE["user"])) {
+                                    echo "Login/Sign Up";
+                                } else {
+                                    echo "Welcome,".$_COOKIE["user"]."!";
+                                }
+                            }catch(Exception $e){
                                 echo "Login/Sign Up";
-                            } else {
-                                echo "Welcome,".$_COOKIE[$cookie_name]."!";
                             }
-                            ?></button>
+                            ?>
+                            </button>
                 </a>
 
         </div>
@@ -248,8 +255,8 @@ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1
                 <div class="form-wrapper">
                     <h2>Login</h2>
                     <form id="login-form"  action="index_login.php" method="post">
-                        <input type="email" id="login-email" placeholder="Email" required>
-                        <input type="password" id="login-password" placeholder="Password" required>
+                        <input type="email" name="email" id="login-email" placeholder="Email" required>
+                        <input type="password" name="pwd" id="login-password" placeholder="Password" required>
                         <input class="btn btn-secondary"  type="submit" value="Login">
                     </form>
                 </div>
@@ -317,16 +324,16 @@ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1
     </div>
 
 <?php
-if(!isset($_COOKIE[$cookie_name])) {
-    echo "<script> alert('Enable Cookies');
-    document.getElementById(\"body-id\").innerHTML='<p style=\"text-align: center;\">This is a centered paragraph.</p>'
-    </script>";
-} else {
-    echo "<script> 
-    
-    document.getElementById(\"body-id\").innerHTML='<p style=\"text-align: center;\"> Welcome ,".$_COOKIE[$cookie_name] ."!.</p>';
-    </script>";
+try{
+    if(isset($_COOKIE["user"])) {
+        echo "<script> 
+        document.getElementById(\"body-id\").innerHTML='<p style=\"text-align: center;\"> Welcome ,".$_COOKIE["user"] ."!.</p>';
+        </script>";
+    } 
+}catch(Exception $e){
+   
 }
+
 ?>
     <script>
         // When the user scrolls the page, execute myFunction 

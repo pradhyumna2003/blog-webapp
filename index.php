@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,8 +53,13 @@
 
         .carousel-bg {
             background-image: url('images/carsoule-bg.png');
+            height: 100%;
+            /* background-size: auto;
             background-attachment: scroll;
+            background-size: cover; */
             background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
         }
 
         /* Default styles for all devices */
@@ -186,7 +192,15 @@
                 </div>
                 <div class="col align-self-center align-items-end menu">
                     <div class="d-flex justify-content-end">
-                        <a class="nav-link" href="/login.php" style="color: white;">Login / Sign up</a>
+                        <a class="nav-link" href="/login.php" style="color: white;">
+                            <?php
+                            if(!isset($_COOKIE["user"])) {
+                                echo "Login/Sign Up";
+                            } else {
+                                echo "Welcome,".$_COOKIE["user"]."!";
+                            }
+                            ?>
+                        </a>
                     </div>
                 </div>
                 <div class="col align-self-center align-items-end menu-sm-bar">
@@ -211,7 +225,15 @@
             <p><a href="#" class="nav-link">Contact us</a></p>
             <p>
                 <a href="/login.php">
-                    <button class="btn btn-secondary" type="button">Login / Sign up</button>
+                    <button class="btn btn-secondary" type="button">
+                    <?php
+                            if(!isset($_COOKIE["user"])) {
+                                echo "Login/Sign Up";
+                            } else {
+                                echo "Welcome,".$_COOKIE["user"]."!";
+                            }
+                            ?>
+                    </button>
                 </a>
 
         </div>
