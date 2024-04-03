@@ -192,15 +192,18 @@
                 </div>
                 <div class="col align-self-center align-items-end menu">
                     <div class="d-flex justify-content-end">
-                        <a class="nav-link" href="/login.php" style="color: white;">
+                       
                             <?php
                             if(!isset($_COOKIE["user"])) {
-                                echo "Login/Sign Up";
+                                echo "<a class=\"nav-link\" href=\"/login.php\" style=\"color: white;\">Login/Sign Up</a>
+                                
+                                ";
                             } else {
-                                echo "Welcome,".$_COOKIE["user"]."!";
+                                echo "<a class=\"nav-link\" href=\"/profile.php\" style=\"color: white;\">Welcome,".$_COOKIE["user"]."!</a>
+                                ";
                             }
                             ?>
-                        </a>
+                        
                     </div>
                 </div>
                 <div class="col align-self-center align-items-end menu-sm-bar">
@@ -224,17 +227,25 @@
             <p><a href="#" class="nav-link">About Us</a></p>
             <p><a href="#" class="nav-link">Contact us</a></p>
             <p>
-                <a href="/login.php">
-                    <button class="btn btn-secondary" type="button">
-                    <?php
+            <?php
                             if(!isset($_COOKIE["user"])) {
-                                echo "Login/Sign Up";
+                                echo "
+                                <a class=\"nav-link\" href=\"/login.php\" style=\"color: white;\">
+                                <button class=\"btn btn-secondary\" type=\"button\">
+                                Login/Sign Up
+                                </button>
+                                </a>
+                                ";
                             } else {
-                                echo "Welcome,".$_COOKIE["user"]."!";
+                                echo "<a class=\"nav-link\" href=\"/profile.php\" style=\"color: white;\">
+                                <button class=\"btn btn-secondary\" type=\"button\">
+                                Welcome,".$_COOKIE["user"]."!
+                                </button>
+                                </a>
+                                ";
                             }
-                            ?>
-                    </button>
-                </a>
+            ?>
+                
 
         </div>
     </div>

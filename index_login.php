@@ -1,3 +1,4 @@
+
 <?php
 $finalUS="";
 $finalEM="";
@@ -46,7 +47,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 // Create connection
 
-
+if($success==1){
+    header("Location:./profile.php");
+    exit;
+}
 
 
 ?>
@@ -256,7 +260,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                 <div class="col align-self-center menu">
                     <ul class="nav justify-content-between" style="min-width: fit-content;">
                         <li class="nav-item" style="color: white;">
-                            <a class="nav-link active" href="#" style="color: white;">Home</a>
+                            <a class="nav-link active" href="/index.php" style="color: white;">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" style="color: white;">About Us</a>
@@ -274,7 +278,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                                 if (!isset($_COOKIE["user"])) {
                                     echo "Login/Sign Up";
                                 } else {
-                                    echo "Welcome," . $_COOKIE["user"] . "!";
+                                    echo  $_COOKIE["user"];
                                 }
                             } catch (Exception $e) {
                                 echo "Login/Sign Up";

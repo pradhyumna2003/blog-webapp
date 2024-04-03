@@ -1,4 +1,62 @@
->
+<?php
+$finalUS="";
+$finalEM="";
+$finalPN=-1;
+$success = 0;
+try {
+
+    
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "blogdb";
+    if(!isset($_COOKIE["user"])) {
+        header("Location:./login.php");
+        exit;
+    } else {
+        $user=$_COOKIE["user"];
+    }
+    
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    // Check connection
+    if (!$conn) {
+        $success=0;
+        echo "<h1>Failed!</h1>";
+        die("Connection failed: " . mysqli_connect_error());
+    }
+    // echo "Connected successfully";
+    $sql = "SELECT username,email,noofpost FROM users where username='$user'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $finalUS=$row["username"];
+            $finalEM=$row["email"];
+            $finalPN=$row["noofpost"];
+            setcookie("user", $finalUS, time() + (86400 * 30), "/"); // 86400 = 1
+            // setcookie("email", $finalEM, time() + (86400 * 30), "/"); // 86400 = 1
+            // setcookie("PN", $finalPN, time() + (86400 * 30), "/"); // 86400 = 1
+        }
+        $success=1;
+    }
+    else{
+        throw new Exception("No user found!!");
+    }
+
+    
+
+} catch (Exception $e) {
+    $success=0;
+}
+
+// Create connection
+
+if($success==0){
+    header("Location:./login.php");
+    exit;
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,16 +67,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Blog | Home</title>
     <style>
-        #body-id {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
         .container {
             width: 80%;
             max-width: 600px;
@@ -159,6 +207,39 @@
             border: none;
             padding-right: 10px;
         }
+
+        #body-id {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card p {
+            margin: 10px 0;
+        }
     </style>
 
 </head>
@@ -182,7 +263,7 @@
                 <div class="col align-self-center menu">
                     <ul class="nav justify-content-between" style="min-width: fit-content;">
                         <li class="nav-item" style="color: white;">
-                            <a class="nav-link active" href="index.php" style="color: white;">Home</a>
+                            <a class="nav-link active" href="/index.php" style="color: white;">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" style="color: white;">About Us</a>
@@ -195,17 +276,16 @@
                 <div class="col align-self-center align-items-end menu">
                     <div class="d-flex justify-content-end">
                         <a class="nav-link" href="/login.php" style="color: white;">
-                        <?php
-                            try{
-                                if(!isset($_COOKIE["user"])) {
+                            <?php
+                            try {
+                                if (!isset($_COOKIE["user"])) {
                                     echo "Login/Sign Up";
                                 } else {
-                                    echo "Welcome,".$_COOKIE["user"]."!";
+                                    echo  $_COOKIE["user"];
                                 }
-                            }catch(Exception $e){
+                            } catch (Exception $e) {
                                 echo "Login/Sign Up";
                             }
-                            
                             ?>
                         </a>
                     </div>
@@ -232,45 +312,43 @@
             <p><a href="#" class="nav-link">Contact us</a></p>
             <p>
                 <a href="/login.php">
-                    <button class="btn btn-secondary" type="button"> 
+                    <button class="btn btn-secondary" type="button">
                         <?php
-                            try{
-                                if(!isset($_COOKIE["user"])) {
-                                    echo "Login/Sign Up";
-                                } else {
-                                    echo "Welcome,".$_COOKIE["user"]."!";
-                                }
-                            }catch(Exception $e){
+                        try {
+                            if (!isset($_COOKIE["user"])) {
                                 echo "Login/Sign Up";
+                            } else {
+                                echo "Welcome," . $_COOKIE["user"] . "!";
                             }
-                            ?>
-                            </button>
+                        } catch (Exception $e) {
+                            echo "Login/Sign Up";
+                        }
+                        ?>
+                    </button>
                 </a>
 
         </div>
     </div>
     <div id="body-id">
-        <div class="container" >
-            <div class="form-container">
-                <div class="form-wrapper">
-                    <h2>Login</h2>
-                    <form id="login-form"  action="index_login.php" method="post">
-                        <input type="email" name="email" id="login-email" placeholder="Email" required>
-                        <input type="password" name="pwd" id="login-password" placeholder="Password" required>
-                        <input class="btn btn-secondary"  type="submit" value="Login">
+        <div class="card-container">
+            <div class="card">
+                <?php
+                if($success==1){
+                    echo "<h2><em>Welcome ,</em>".$finalUS."</h2>
+                    <p>Email: ".$finalEM."</p>
+                    <p>Posts: ".$finalPN."</p>
+                    <form action=\"logout.php\" method=\"post\">
+                        <input type=\"submit\" value=\"Logout\">
                     </form>
-                </div>
-                <div class="form-wrapper">
-                    <h2>Signup</h2>
-                    <form id="signup-form" action="index_signup.php" method="post">
-                        <input type="text" id="signup-username" placeholder="Username" required>
-                        <input type="email" id="signup-email" placeholder="Email" required>
-                        <input type="password" id="signup-password" placeholder="Password" required>
-                        <input type="password" id="signup-confirm-password" 
-                        placeholder="Confirm Password" required>
-                        <input class="btn btn-secondary" type="submit" value="SignUp">
-                    </form>
-                </div>
+                    ";
+                    
+                }
+                else{
+                    echo "<h2>Failed!!</h2>";
+                }
+                
+                ?>
+                
             </div>
         </div>
     </div>
@@ -323,18 +401,7 @@
 
     </div>
 
-<?php
-try{
-    if(isset($_COOKIE["user"])) {
-        echo "<script> 
-        document.getElementById(\"body-id\").innerHTML='<p style=\"text-align: center;\"> Welcome ,".$_COOKIE["user"] ."!.</p>';
-        </script>";
-    } 
-}catch(Exception $e){
-   
-}
 
-?>
     <script>
         // When the user scrolls the page, execute myFunction 
         window.onscroll = function() {

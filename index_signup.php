@@ -204,7 +204,7 @@ if(!isset($_COOKIE[$cookie_name])) {
                 <div class="col align-self-center menu">
                     <ul class="nav justify-content-between" style="min-width: fit-content;">
                         <li class="nav-item" style="color: white;">
-                            <a class="nav-link active" href="#" style="color: white;">Home</a>
+                            <a class="nav-link active" href="index.php" style="color: white;">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" style="color: white;">About Us</a>
